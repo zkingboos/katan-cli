@@ -1,13 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "katan.cli"
-version = "1.0-SNAPSHOT"
-
 plugins {
     kotlin("jvm") version "1.5.10"
-    id("com.github.johnrengelman.shadow") version "6.0.0"
-    id("com.jakewharton.mosaic") version "0.1.0"
-    application
 }
 
 buildscript {
@@ -16,32 +10,31 @@ buildscript {
     }
 
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
         classpath("com.jakewharton.mosaic:mosaic-gradle-plugin:0.1.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     }
 }
 
-application {
-    mainClassName = "katan.cli.MainKt"
-}
+group = "katan.cli"
+version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+subprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "com.jakewharton.mosaic")
 
-tasks {
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+    repositories {
+        mavenCentral()
     }
 
-    jar {
-        manifest {
-            attributes["Main-Class"] = application.mainClassName
-            attributes["Implementation-Version"] = project.version
+    dependencies {
+        implementation("org.jetbrains.kotlinx:kotlinx-cli-jvm:0.3.2")
+        implementation("com.jakewharton.mosaic:mosaic-runtime:0.1.0")
+    }
+
+    tasks {
+        withType<KotlinCompile> {
+            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=compatibility")
         }
-    }
-
-    build {
-        dependsOn(shadowJar)
     }
 }

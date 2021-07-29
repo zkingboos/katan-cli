@@ -27,6 +27,7 @@ subprojects {
     }
 
     dependencies {
+        implementation(kotlin("reflect"))
         implementation("org.jetbrains.kotlinx:kotlinx-cli-jvm:0.3.2")
         implementation("com.jakewharton.mosaic:mosaic-runtime:0.1.0")
     }

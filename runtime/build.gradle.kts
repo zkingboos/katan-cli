@@ -8,6 +8,7 @@ application {
 }
 
 dependencies {
+    implementation(project(":parser"))
     implementation(project(":framework"))
     implementation(project(":commands"))
 }

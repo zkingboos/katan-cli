@@ -1,41 +1,49 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("multiplatform") version Libs.kotlinVersion
+    kotlin("plugin.serialization") version Libs.kotlinVersion
+    id("com.github.johnrengelman.shadow") version "6.0.0"
+    application
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+group = "gg.katan.cli"
 
-    dependencies {
-        classpath("com.jakewharton.mosaic:mosaic-gradle-plugin:0.1.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass.set("gg.katan.cli.JvmMainKt")
+}
+
+// setup common binary executable entrypoint to some targets
+fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
+    binaries {
+        executable {
+            entryPoint = "main"
+        }
     }
 }
 
-group = "katan.cli"
-version = "1.0-SNAPSHOT"
+kotlin {
+    jvm()
+    macosX64 { entryPoint() }
+    mingwX64 { entryPoint() }
+    linuxX64 { entryPoint() }
 
-subprojects {
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "com.jakewharton.mosaic")
-
-    repositories {
-        mavenCentral()
+    js {
+        nodejs()
+        binaries.executable()
     }
 
-    dependencies {
-        implementation(kotlin("reflect"))
-        implementation("org.jetbrains.kotlinx:kotlinx-cli-jvm:0.3.2")
-        implementation("com.jakewharton.mosaic:mosaic-runtime:0.1.0")
-    }
+    sourceSets {
+        all {
+            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
+        }
 
-    tasks {
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "1.8"
-            kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=compatibility")
+        val commonMain by getting {
+            dependencies {
+                implementation(Libs.KTX.Coroutines.core)
+            }
         }
     }
 }

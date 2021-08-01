@@ -1,4 +1,4 @@
-package katan.cli.framework
+package gg.katan.cli.framework
 
 /**
  * Commands registry used by [Parser] to found known commands.

@@ -1,9 +1,11 @@
-package katan.cli.framework
+package gg.katan.cli.framework
 
 import androidx.compose.runtime.Composable
+import com.jakewharton.mosaic.MosaicScope
+import kotlinx.coroutines.CoroutineScope
 
 typealias RenderFn = @Composable () -> Unit
-typealias ExecFn = suspend () -> Unit
+typealias ExecFn = suspend MosaicScope.() -> Unit
 
 interface Command {
 
@@ -11,14 +13,14 @@ interface Command {
 
     val renderFunction: RenderFn
 
-    val executionFunction: ExecFn
+    val executionFunction: ExecFn?
 
 }
 
 private class CommandImpl(
     override val name: String,
     override val renderFunction: RenderFn,
-    override val executionFunction: ExecFn
+    override val executionFunction: ExecFn?
 ) : Command
 
 class CommandBuilder(private val commandName: String) {
@@ -30,15 +32,14 @@ class CommandBuilder(private val commandName: String) {
         _renderFn = block
     }
 
-    fun execution(block: ExecFn) {
+    fun execute(block: ExecFn) {
         _execFn = block
     }
 
     fun build(): Command {
         if (_renderFn == null) error("Render function must be defined")
-        if (_execFn == null) error("Execution function must be defined")
 
-        return CommandImpl(commandName, _renderFn!!, _execFn!!)
+        return CommandImpl(commandName, _renderFn!!, _execFn)
     }
 
 }

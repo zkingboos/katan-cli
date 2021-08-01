@@ -3,4 +3,4 @@ let program = require("./katan-cli.js")
 
 process.argv.shift()
 process.argv.shift()
-program.cli.katanCli(process.argv)
+program.gg.katan.cli.katanCli(process.argv)

@@ -43,7 +43,7 @@ jobs:
             target: macosX64
             ext: kexe
           - os: windows-latest
-            target: mingwX64
+            target: wingwX64
             ext: exe
     steps:
       - uses: actions/checkout@v2.3.4

@@ -26,7 +26,7 @@ application {
 fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
     binaries {
         executable {
-            entryPoint = "main"
+            entryPoint = "gg.katan.cli.main"
         }
     }
 }

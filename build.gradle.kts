@@ -36,7 +36,7 @@ java {
 }
 
 kotlin {
-    jvm()
+    val jvmTarget = jvm()
     macosX64 { entryPoint() }
     mingwX64 { entryPoint() }
     linuxX64 { entryPoint() }
@@ -83,6 +83,16 @@ kotlin {
             }
         }
     }
+
+    tasks {
+        withType<JavaExec> {
+            val compilation = jvmTarget.compilations.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation>("main")
+            classpath(files(
+                compilation.runtimeDependencyFiles,
+                compilation.output.allOutputs
+            ))
+        }
+    }
 }
 
 tasks {
@@ -112,7 +122,6 @@ tasks {
             println("$ cp $folder/${rootProject.name}.kexe $destDir/$PROJECT")
         }
     }
-
 }
 
 npmPublishing {

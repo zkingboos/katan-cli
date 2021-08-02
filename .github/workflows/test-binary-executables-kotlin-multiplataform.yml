@@ -43,19 +43,16 @@ jobs:
             ext: .kexe
             assetExt: ""
             releaseCommand: runReleaseExecutableLinuxX64
-            checksum: "sha256sum build/bin/linuxX64/releaseExecutable/katan-cli.kexe"
           - os: macos-latest
             target: macosX64
             ext: .kexe
             assetExt: .kexe
             releaseCommand: runReleaseExecutableMacosX64
-            checksum: "shasum --algorithm=256 build/bin/macosX64/releaseExecutable/katan-cli.kexe"
           - os: windows-latest
             target: mingwX64
             ext: .exe
             assetExt: .exe
             releaseCommand: runReleaseExecutableMingwX64
-            checksum: "(Get-FileHash build/bin/mingwX64/releaseExecutable/katan-cli.exe -Algorithm SHA256).Hash.ToLower()"
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
@@ -81,16 +78,3 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
-      - name: Create checksum
-        run: |
-          CHECKSUM=`${{ matrix.checksum }}`
-          echo -e "$CHECKSUM" > checksum.txt
-      - name: Upload checksum
-        uses: svenstaro/upload-release-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: checksum.txt
-          asset_name: checksum.txt
-          tag: ${{ github.ref }}

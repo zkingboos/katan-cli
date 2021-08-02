@@ -6,6 +6,7 @@ plugins {
     kotlin("multiplatform") version Libs.kotlinVersion
     kotlin("plugin.serialization") version Libs.kotlinVersion
     application
+    `maven-publish`
 }
 
 val PROJECT = "katan-cli"

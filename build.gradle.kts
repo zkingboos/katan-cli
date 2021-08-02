@@ -75,6 +75,7 @@ kotlin {
 }
 
 npmPublishing {
+    val pkg = "cli"
     val organization = "katan.gg"
 
     token.set(System.getenv("NPM_AUTH_TOKEN"))
@@ -86,14 +87,14 @@ npmPublishing {
         bins = mutableMapOf(PROJECT to "./$PROJECT")
         keywords = mutableListOf("katan", "cli", "kotlin", "multiplatform")
         files = mutableListOf("bin/$PROJECT")
-        name = "@$organization/$name"
+        name = "@$organization/$pkg"
         dependencies = dependencies?.mapKeys { (key, _) ->
             if (name!! in key) "@$organization/$key" else key
         }?.toMutableMap()
     }
 
     liftJsSources { _, _, line ->
-        line.replace("'$PROJECT", "'@$organization/$PROJECT")
-            .replace("\"$PROJECT", "\"@$organization/$PROJECT")
+        line.replace("'$pkg", "'@$organization/$pkg")
+            .replace("\"$pkg", "\"@$organization/$pkg")
     }
 }

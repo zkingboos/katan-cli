@@ -38,13 +38,16 @@ jobs:
         include:
           - os: ubuntu-latest
             target: linuxX64
-            ext: ""
+            ext: .kexe
+            assetExt: ""
           - os: macos-latest
             target: macosX64
-            ext: ".kexe"
+            ext: .kexe
+            assetExt: .kexe
           - os: windows-latest
             target: wingwX64
-            ext: ".exe"
+            ext: .exe
+            assetExt: .kexe
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
@@ -59,8 +62,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/bin/${{ matrix.target }}/debugExecutable/katan-cli${{ matrix.ext }}
-          asset_name: katan-cli-${{ matrix.target }}${{ matrix.ext }}
+          file: build/bin/${{ matrix.target }}/debugExecutable/katan-cli.${{ matrix.ext }}
+          asset_name: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
           tag: ${{ github.ref }}
           overwrite: true
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}

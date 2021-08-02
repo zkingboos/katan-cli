@@ -12,6 +12,7 @@ plugins {
 val PROJECT = "katan-cli"
 
 group = "gg.katan.cli"
+version = "0.0.1"
 
 repositories {
     mavenCentral()

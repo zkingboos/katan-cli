@@ -20,24 +20,21 @@ jobs:
         include:
           - os: ubuntu-latest
             target: linuxX64 
-
           - os: macos-latest
             target: macosX64
-
           - os: windows-latest
             target: mingwX64
     steps:
       - uses: actions/checkout@v2.3.4
-
       - name: Build katan-cli project (${{matrix.target}})
         uses: burrunan/gradle-cache-action@v1
         with:
           job-id: ${{matrix.target}}
           arguments: clean install
           gradle-version: wrapper
-
       - name: Archive katan-cli matrix binaries file
         uses: actions/upload-artifact@v2
         with:
           name: ${{matrix.target}}
           path: build/bin/${{ matrix.target }}/debugExecutable
+          if-no-files-found: error

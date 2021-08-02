@@ -59,6 +59,15 @@ jobs:
           job-id: ${{ matrix.target }}
           arguments: clean ${{ matrix.releaseCommand }}
           gradle-version: wrapper
+      - uses: MCJack123/ghaction-generate-release-hashes@v1
+        name: Create checksums
+        with:
+          hash-type: sha256
+          file-name: checksums.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Asset Hashes
+          path: checksums.txt
       - name: Upload artifacts
         uses: svenstaro/upload-release-action@v2
         env:

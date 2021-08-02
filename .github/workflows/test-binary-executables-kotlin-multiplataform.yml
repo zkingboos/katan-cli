@@ -32,6 +32,8 @@ jobs:
     name: Build
     needs: [release]
     runs-on: ${{ matrix.os }}
+    env:
+      ARCHIVE: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -41,27 +43,32 @@ jobs:
             ext: .kexe
             assetExt: ""
             releaseCommand: runReleaseExecutableLinuxX64
-            checksum: "sha256sum ${{ steps.upload_artifacts.file }}"
+            checksum: "sha256sum ${{ steps.archive_path.outputs.ARCHIVE }}"
           - os: macos-latest
             target: macosX64
             ext: .kexe
             assetExt: .kexe
             releaseCommand: runReleaseExecutableMacosX64
-            checksum: "shasum --algorithm=256 ${{ steps.upload_artifacts.file }}"
+            checksum: "shasum --algorithm=256 ${{ steps.archive_path.outputs.ARCHIVE }}"
           - os: windows-latest
             target: mingwX64
             ext: .exe
             assetExt: .exe
             releaseCommand: runReleaseExecutableMingwX64
-            checksum: "(Get-FileHash ${{ steps.upload_artifacts.file }} -Algorithm SHA256).Hash.ToLower()"
+            checksum: "(Get-FileHash ${{ steps.archive_path.outputs.ARCHIVE }} -Algorithm SHA256).Hash.ToLower()"
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
+        id: build
         uses: burrunan/gradle-cache-action@v1
         with:
           job-id: ${{ matrix.target }}
           arguments: clean ${{ matrix.releaseCommand }}
           gradle-version: wrapper
+      - name: Generate archive path
+        id: archive_path
+        run: |
+          echo "::set-output name=ARCHIVE::${{ build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }} }}"
       - name: Upload artifacts
         id: upload_artifacts
         uses: svenstaro/upload-release-action@v2
@@ -69,8 +76,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }}
-          asset_name: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
+          file: ${{ steps.archive_path.outputs.ARCHIVE }}
+          asset_name: ${{ env.ASSET }}
           tag: ${{ github.ref }}
           overwrite: true
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
@@ -79,11 +86,11 @@ jobs:
           CHECKSUM=`${{ matrix.checksum }}`
           echo -e "$CHECKSUM" > checksum.txt
       - name: Upload checksum
-        uses: actions/upload-release-asset@v1
+        uses: svenstaro/upload-release-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./checksum.txt
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: checksum.txt
           asset_name: checksum.txt
-          asset_content_type: text/plain
+          tag: ${{ github.ref }}

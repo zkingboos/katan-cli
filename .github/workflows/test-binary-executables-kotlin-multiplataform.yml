@@ -43,19 +43,19 @@ jobs:
             ext: .kexe
             assetExt: ""
             releaseCommand: runReleaseExecutableLinuxX64
-            checksum: "sha256sum ${{ steps.archive_path.outputs.ARCHIVE }}"
+            checksum: "sha256sum build/bin/linuxX64/releaseExecutable/katan-cli.kexe"
           - os: macos-latest
             target: macosX64
             ext: .kexe
             assetExt: .kexe
             releaseCommand: runReleaseExecutableMacosX64
-            checksum: "shasum --algorithm=256 ${{ steps.archive_path.outputs.ARCHIVE }}"
+            checksum: "shasum --algorithm=256 build/bin/macosX64/releaseExecutable/katan-cli.kexe"
           - os: windows-latest
             target: mingwX64
             ext: .exe
             assetExt: .exe
             releaseCommand: runReleaseExecutableMingwX64
-            checksum: "(Get-FileHash ${{ steps.archive_path.outputs.ARCHIVE }} -Algorithm SHA256).Hash.ToLower()"
+            checksum: "(Get-FileHash build/bin/mingwX64/releaseExecutable/katan-cli.exe -Algorithm SHA256).Hash.ToLower()"
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
@@ -68,7 +68,7 @@ jobs:
       - name: Generate archive path
         id: archive_path
         run: |
-          echo "::set-output name=ARCHIVE::${{ build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }} }}"
+          echo "::set-output name=ARCHIVE::build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }}"
       - name: Upload artifacts
         id: upload_artifacts
         uses: svenstaro/upload-release-action@v2

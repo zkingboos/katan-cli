@@ -22,7 +22,7 @@ application {
     mainClass.set("gg.katan.cli.JvmMainKt")
 }
 
-// setup common binary executable entrypoint to some targets
+// setup common binary executable entrypoint to native targets
 fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
     binaries {
         executable {
@@ -83,6 +83,36 @@ kotlin {
             }
         }
     }
+}
+
+tasks {
+    register<Copy>("install") {
+        group = "run"
+        description = "Build and install native executable"
+
+        val hostOs = System.getProperty("os.name")
+        val nativeTarget = when {
+            hostOs == "Mac OS X" -> "MacosX64"
+            hostOs == "Linux" -> "LinuxX64"
+            hostOs.startsWith("Windows") -> "MingwX64"
+            else -> throw GradleException("Host $hostOs is not supported in Kotlin/Native.")
+        }
+
+        dependsOn("runDebugExecutable$nativeTarget")
+        val targetLowercase = nativeTarget.first().toLowerCase() + nativeTarget.substring(1)
+        val folder = "build/bin/$targetLowercase/debugExecutable"
+        from(folder) {
+            include("${rootProject.name}.kexe")
+            rename { PROJECT }
+        }
+
+        val destDir = "/usr/local/bin"
+        into(destDir)
+        doLast {
+            println("$ cp $folder/${rootProject.name}.kexe $destDir/$PROJECT")
+        }
+    }
+
 }
 
 npmPublishing {

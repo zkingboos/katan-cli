@@ -54,6 +54,22 @@ kotlin {
                 implementation(Libs.KTX.Coroutines.core)
             }
         }
+
+        val nativeMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val linuxX64Main by getting {
+            dependsOn(nativeMain)
+        }
+
+        val mingwX64Main by getting {
+            dependsOn(nativeMain)
+        }
+
+        val macosX64Main by getting {
+            dependsOn(nativeMain)
+        }
     }
 }
 

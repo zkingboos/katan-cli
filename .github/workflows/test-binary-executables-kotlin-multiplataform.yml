@@ -54,11 +54,13 @@ jobs:
           arguments: clean install
           gradle-version: wrapper
       - name: Upload artifacts
-        uses: actions/upload-release-asset@v1
+        uses: svenstaro/upload-release-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.release.outputs.upload_url }}
-          asset_path: build/bin/${{ matrix.target }}/debugExecutable
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/bin/${{ matrix.target }}/debugExecutable
           asset_name: ${{ matrix.target }}
-          asset_content_type: application/gzip
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "This is my release text"

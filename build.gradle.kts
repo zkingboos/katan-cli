@@ -90,7 +90,7 @@ npmPublishing {
     val organization = "katan.gg"
 
     liftPackageJson {
-        main = PROJECT
+        main = "kotlin/$PROJECT"
         homepage = "https://github.com/KatanPanel/katan-cli"
         bugs = Bugs("https://github.com/KatanPanel/katan-cli/issues")
         license = "MIT"

@@ -20,15 +20,12 @@ jobs:
         include:
           - os: ubuntu-latest
             target: linuxX64 
-            extension: 'katan-cli.kexe'
 
           - os: macos-latest
             target: macosX64
-            extension: 'katan-cli.kexe'
 
           - os: windows-latest
             target: mingwX64
-            extension: 'katan-cli.exe'
     steps:
       - uses: actions/checkout@v2.3.4
 
@@ -39,27 +36,8 @@ jobs:
           arguments: clean install
           gradle-version: wrapper
 
-      #- name: Show all the bundled binary files
-      #  run: |
-      #    find ./build -name "katan-cli*"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Archive katan-cli matrix binaries file
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ github.job }}
-          release_name: "Katan-cli release"
-          draft: false
-          prerelease: false
-
-      - name: Upload binaries
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/bin/${{ matrix.target }}/debugExecutable/${{matrix.extension}}
-          asset_name: ${{ matrix.target }}
-          asset_content_type: application/octet-stream
+          name: ${{matrix.target}}
+          path: build/bin/${{ matrix.target }}/debugExecutable

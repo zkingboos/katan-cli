@@ -62,7 +62,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: build/bin/${{ matrix.target }}/debugExecutable/katan-cli.${{ matrix.ext }}
+          file: build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }}
           asset_name: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
           tag: ${{ github.ref }}
           overwrite: true

@@ -17,13 +17,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    
+        target: ["linuxX64", "macosX64", "mingwX64"]
     steps:
       - uses: actions/checkout@v2.3.4
-      - run: |
-          echo Running on: ${{ matrix.TARGET }}
 
-      - name: Build katan-cli project
+      - name: Build katan-cli project (${{matrix.target}})
         run: |
           chmod +x ./gradlew
           ./gradlew clean install
@@ -31,3 +29,13 @@ jobs:
       - name: Show all the bundled binary files
         run: |
           find ./build -name "katan-cli*"
+
+      - name: Upload binaries
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/bin/${{ matrix.target }}
+          asset_name: ${{ matrix.target }}
+          asset_content_type: application/octet-stream

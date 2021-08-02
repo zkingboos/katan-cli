@@ -78,7 +78,6 @@ npmPublishing {
     val pkg = "cli"
     val organization = "katan.gg"
 
-    token.set(System.getenv("NPM_AUTH_TOKEN"))
     liftPackageJson {
         main = PROJECT
         homepage = "https://github.com/KatanPanel/katan-cli"
@@ -94,7 +93,9 @@ npmPublishing {
     }
 
     liftJsSources { _, _, line ->
-        line.replace("'$pkg", "'@$organization/$pkg")
-            .replace("\"$pkg", "\"@$organization/$pkg")
+        line.replace("'$PROJECT", "'@$organization/$pkg")
+            .replace("\"$PROJECT", "\"@$organization/$pkg")
     }
+
+    token.set(System.getenv("NPM_AUTH_TOKEN"))
 }

@@ -60,7 +60,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/bin/${{ matrix.target }}/debugExecutable/katan-cli.${{ matrix.ext }}
-          asset_name: ${{ matrix.target }}
+          asset_name: katan-cli-${{ matrix.target }}.${{ matrix.ext }}
           tag: ${{ github.ref }}
           overwrite: true
           prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}

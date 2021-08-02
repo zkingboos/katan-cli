@@ -12,18 +12,46 @@ on:
       - "main"
 
 jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: true
+          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
+      - name: Output Release URL File
+        run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+      - name: Save Release URL File for publish
+        uses: actions/upload-artifact@v2
+        with:
+          name: release_url
+          path: release_url.txt
   build:
+    name: Build
+    needs: [release]
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
-            target: linuxX64 
+            target: linuxX64
+            zip_name: linux
           - os: macos-latest
             target: macosX64
+            zip_name: macos
           - os: windows-latest
             target: mingwX64
+            zip_name: windows
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
@@ -32,19 +60,12 @@ jobs:
           job-id: ${{ matrix.target }}
           arguments: clean install
           gradle-version: wrapper
-      - name: Archive binaries
-        uses: actions/upload-artifact@v2
+      - name: Upload
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ matrix.target }}
-          path: build/bin/${{ matrix.target }}/debugExecutable
-          if-no-files-found: error
-  release:
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    name: Release
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: build/bin/${{ matrix.target }}/debugExecutable
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: build/bin/${{ matrix.target }}/debugExecutable
+          asset_name: ${{ matrix.zip_name }}.zip
+          asset_content_type: application/zip

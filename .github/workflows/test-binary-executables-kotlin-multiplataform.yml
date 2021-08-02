@@ -49,7 +49,7 @@ jobs:
           - os: windows-latest
             target: mingwX64
             ext: .exe
-            assetExt: .kexe
+            assetExt: .exe
             releaseCommand: runReleaseExecutableMingwX64
     steps:
       - uses: actions/checkout@v2.3.4

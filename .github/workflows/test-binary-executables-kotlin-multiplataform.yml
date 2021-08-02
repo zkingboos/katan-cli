@@ -40,21 +40,24 @@ jobs:
             target: linuxX64
             ext: .kexe
             assetExt: ""
+            releaseCommand: runReleaseExecutableLinuxX64
           - os: macos-latest
             target: macosX64
             ext: .kexe
             assetExt: .kexe
+            releaseCommand: runReleaseExecutableMacosX64
           - os: windows-latest
-            target: wingwX64
+            target: mingwX64
             ext: .exe
             assetExt: .kexe
+            releaseCommand: runReleaseExecutableMingwX64
     steps:
       - uses: actions/checkout@v2.3.4
       - name: Build project (${{ matrix.target }})
         uses: burrunan/gradle-cache-action@v1
         with:
           job-id: ${{ matrix.target }}
-          arguments: clean install
+          arguments: clean ${{ matrix.releaseCommand }}
           gradle-version: wrapper
       - name: Upload artifacts
         uses: svenstaro/upload-release-action@v2

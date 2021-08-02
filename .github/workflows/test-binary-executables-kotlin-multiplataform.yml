@@ -1,0 +1,33 @@
+# Test binary executable files from kotlin multiplataform build
+
+name: 'test-binary-executables-kotlin-multiplataform'
+
+on: 
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - run: |
+          echo Running on: ${{ matrix.TARGET }}
+
+      - name: Build katan-cli project
+        run: |
+          chmod +x ./gradlew
+          ./gradlew clean install
+
+      - name: Show all the bundled binary files
+        run: |
+          find ./build -name "katan-cli*"

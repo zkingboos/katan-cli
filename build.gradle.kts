@@ -71,6 +71,16 @@ kotlin {
         val macosX64Main by getting {
             dependsOn(nativeMain)
         }
+
+        val jsMain by getting {
+            repositories {
+                jcenter()
+            }
+
+            dependencies {
+                implementation(Libs.KTX.nodeJs)
+            }
+        }
     }
 }
 

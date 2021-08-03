@@ -1,32 +1,35 @@
-# Katan CLI
+<img align="right" width="120" height="120" src="https://avatars.githubusercontent.com/u/70386471?s=200&v=4">
+<h1>katan-cli</h1> 
 
-Console UI built using Jetpack Compose to Katan projects.
+[![test-binary-executables-kotlin-multiplataform](https://github.com/zkingboos/katan-cli/actions/workflows/test-binary-executables-kotlin-multiplataform.yml/badge.svg?branch=main)](https://github.com/zkingboos/katan-cli/actions/workflows/test-binary-executables-kotlin-multiplataform.yml)
 
-## Disclaimer
-Previously a [Katan](https://github.com/KatanPanel/Katan) module, it has been ported to be cross-platform and be a
-single project used within the Katan context whether inside or outside a Docker container via a Virtual Terminal, Linux service and Windows service.
+Multiplatform command-line interface for Katan.
+
+This project targets tools for node manipulation, general backup workflow management, remote server and file uploads, and fast and easy installation and cluster integration using the orchestrator of your choice for Katan.
+
+#### Supported environments
+* Windows (x64)
+* Linux (amd64/em64t)
+* macOS (x64)
+* JVM
+* NodeJS
+
+## Project Status
+As an official Katan project integrated into the main project, this project is also under development and follows the versioning pattern of the [main project](https://github.com/KatanPanel/Katan).
+You can follow updates on project status in our official Discord community and discuss.
+* [Discord Community](https://discord.gg/j8JahE8xuV)
+* [Official Website](https://katan.gg)
+
+## Installation
+After installation, type ***katan*** or `katan-cli` on any platform to get started.
+
+*TODO*
+
+## Documentation
+Check out the [Official Documentation](https://katanpanel.github.io/katan-website) for installation steps, supported platforms and more.
+
+## Issues
+If your issue is related to some Katan functionality, redirect your issue to [Katan issues](https://github.com/KatanPanel/Katan/issues).
 
 ## License
-```
-MIT License
-
-Copyright (c) 2020-present Katan
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+katan-cli is licensed under the [MIT](https://github.com/KatanPanel/katan-cli/blob/main/LICENSE) license.

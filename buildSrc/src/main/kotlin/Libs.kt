@@ -3,8 +3,6 @@ object Libs {
     const val kotlinVersion = "1.5.20"
 
     object KTX {
-        const val nodeJs = "org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7"
-
         object Coroutines {
             private const val prefix = "org.jetbrains.kotlinx:kotlinx-coroutines"
             private const val version = "1.5.1"

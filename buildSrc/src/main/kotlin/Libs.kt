@@ -11,9 +11,6 @@ object Libs {
             private const val version = "1.5.1"
 
             const val core = "$prefix-core:$version"
-            const val windows = "$prefix-core-mingwx64:$version"
-            const val linux = "$prefix-core-linuxx64:$version"
-            const val macos = "$prefix-core-macosx64:$version"
         }
     }
 

@@ -8,7 +8,7 @@ plugins {
 
 val PROJECT = "katan-cli"
 
-group = "gg.katan.cli"
+group = "org.katan.cli"
 version = "0.0.1"
 
 repositories {
@@ -16,14 +16,14 @@ repositories {
 }
 
 application {
-    mainClass.set("gg.katan.cli.JvmMainKt")
+    mainClass.set("$group.JvmMainKt")
 }
 
 // setup common binary executable entrypoint to native targets
 fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
     binaries {
         executable {
-            entryPoint = "gg.katan.cli.main"
+            entryPoint = "$group.main"
         }
     }
 }
@@ -46,8 +46,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(Libs.KTX.Coroutines.core)
-                implementation("com.github.ajalt.clikt:clikt:3.2.0")
-                implementation("com.github.ajalt.mordant:mordant:2.0.0-beta2")
+                implementation(Libs.clikt)
+                implementation(Libs.mordant)
             }
         }
 

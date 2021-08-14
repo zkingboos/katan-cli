@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     kotlin("multiplatform") version Libs.kotlinVersion
     kotlin("plugin.serialization") version Libs.kotlinVersion
     application
@@ -33,7 +33,9 @@ java {
 }
 
 kotlin {
-    val jvmTarget = jvm()
+    val jvmTarget = jvm() {
+
+    }
     macosX64 { entryPoint() }
     mingwX64 { entryPoint() }
     linuxX64 { entryPoint() }
@@ -67,6 +69,14 @@ kotlin {
                 compilation.runtimeDependencyFiles,
                 compilation.output.allOutputs
             ))
+        }
+
+        shadowJar {
+            from(jvmTarget.compilations.getByName("main").output)
+            configurations = mutableListOf(
+                jvmTarget.compilations.getByName("main").compileDependencyFiles as Configuration,
+                jvmTarget.compilations.getByName("main").runtimeDependencyFiles as Configuration
+            )
         }
     }
 }

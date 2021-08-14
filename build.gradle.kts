@@ -78,3 +78,26 @@ kotlin {
         }
     }
 }
+
+tasks {
+    register("allRun") {
+        group = "run"
+        description = "Run on the JVM and native executables"
+
+        val os = System.getProperty("os.name")
+        val nativeTarget = when {
+            os == "Mac OS X" -> "MacosX64"
+            os == "Linux" -> "LinuxX64"
+            os.startsWith("Windows") -> "MingwX64"
+            else -> throw GradleException("OS $os is not supported in Kotlin/Native")
+        }
+
+        dependsOn("run", "runDebugExecutable$nativeTarget")
+    }
+
+    register("ci") {
+        group = "run"
+        description = "Run all tests and run native executables"
+        dependsOn("allTests", "allRun")
+    }
+}

@@ -1,4 +1,4 @@
-name: "publish-binaries"
+name: "publish"
 
 on: 
   workflow_dispatch:

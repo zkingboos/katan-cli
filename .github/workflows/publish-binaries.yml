@@ -1,6 +1,4 @@
-# Test binary executable files from kotlin multiplataform build
-
-name: 'test-binary-executables-kotlin-multiplataform'
+name: "publish-binaries"
 
 on: 
   workflow_dispatch:

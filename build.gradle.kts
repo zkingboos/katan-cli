@@ -1,5 +1,3 @@
-import io.github.gciatto.kt.node.*
-
 plugins {
     id("com.github.johnrengelman.shadow") version "6.0.0"
     kotlin("multiplatform") version Libs.kotlinVersion
@@ -49,7 +47,7 @@ kotlin {
             dependencies {
                 implementation(Libs.KTX.Coroutines.core)
                 implementation("com.github.ajalt.clikt:clikt:3.2.0")
-                implementation("org.jline:jline:3.20.0")
+                implementation("com.github.ajalt.mordant:mordant:2.0.0-beta2")
             }
         }
 

@@ -1,3 +1,3 @@
-package gg.katan.cli
+package org.katan.cli
 
 actual val platform: Platform = Platform.LINUX

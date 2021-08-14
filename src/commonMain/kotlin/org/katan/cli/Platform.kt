@@ -1,4 +1,4 @@
-package gg.katan.cli
+package org.katan.cli
 
 enum class Platform {
     MACOS,

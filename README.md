@@ -1,8 +1,5 @@
 <img align="right" width="120" height="120" src="https://avatars.githubusercontent.com/u/70386471?s=200&v=4">
-<h1>katan-cli</h1> 
-
-[![publish-binaries](https://github.com/zkingboos/katan-cli/actions/workflows/publish-binaries.yml/badge.svg?
-branch=main)](https://github.com/zkingboos/katan-cli/actions/workflows/publish-binaries.yml)
+<h1>katan-cli</h1>
 
 Multiplatform command-line interface for Katan.
 

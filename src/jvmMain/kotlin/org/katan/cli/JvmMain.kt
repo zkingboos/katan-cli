@@ -13,7 +13,7 @@ actual val platform: Platform by lazy {
     }
 }
 
-fun main(args: Array<out String>) {
+fun main(args: Array<String>) {
     runBlocking {
         initCli(args)
     }

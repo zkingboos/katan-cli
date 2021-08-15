@@ -80,17 +80,37 @@ kotlin {
 }
 
 tasks {
+    val os = System.getProperty("os.name")
+    val nativeTarget = when {
+        os == "Mac OS X" -> "MacosX64"
+        os == "Linux" -> "LinuxX64"
+        os.startsWith("Windows") -> "MingwX64"
+        else -> throw GradleException("OS $os is not supported in Kotlin/Native")
+    }
+
+
+    register<Copy>("install") {
+        group = "run"
+        description = "Build the native executable and install in the current platform"
+        dependsOn("runDebugExecutable$nativeTarget")
+
+        val nativeTargetName = nativeTarget.first().toLowerCase() + nativeTarget.substring(1)
+        val sourceDirectory = "build/bin/$nativeTargetName/debugExecutable"
+        from(sourceDirectory) {
+            include("${rootProject.name}.kexe")
+            rename { rootProject.name }
+        }
+
+        val targetDir = "/usr/local/bin"
+        into(targetDir)
+        doLast {
+            println("$ cp $sourceDirectory/${rootProject.name}.kexe $targetDir/${rootProject.name}")
+        }
+    }
+    
     register("allRun") {
         group = "run"
         description = "Run on the JVM and native executables"
-
-        val os = System.getProperty("os.name")
-        val nativeTarget = when {
-            os == "Mac OS X" -> "MacosX64"
-            os == "Linux" -> "LinuxX64"
-            os.startsWith("Windows") -> "MingwX64"
-            else -> throw GradleException("OS $os is not supported in Kotlin/Native")
-        }
 
         dependsOn("run", "runDebugExecutable$nativeTarget")
     }

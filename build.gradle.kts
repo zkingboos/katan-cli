@@ -34,7 +34,7 @@ kotlin {
             dependencies {
                 implementation(Libs.KTX.Coroutines.core)
                 implementation(Libs.clikt)
-                // implementation(Libs.mordant)
+                implementation(Libs.mordant)
             }
         }
 

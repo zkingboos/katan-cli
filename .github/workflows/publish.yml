@@ -1,78 +1,32 @@
-name: "publish"
+# This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-on: 
+name: Publish
+
+on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - "main"
-  push:
-    branches:
-      - "main"
+  release:
+    types: [created]
 
 jobs:
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    outputs:
-      upload_url: ${{ steps.create_release.outputs.upload_url }}
-    steps:
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: true
-          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
   build:
-    name: Build
-    needs: [release]
-    runs-on: ${{ matrix.os }}
-    env:
-      ARCHIVE: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            target: linuxX64
-            ext: .kexe
-            assetExt: ""
-            releaseCommand: runReleaseExecutableLinuxX64
-          - os: macos-latest
-            target: macosX64
-            ext: .kexe
-            assetExt: .kexe
-            releaseCommand: runReleaseExecutableMacosX64
-          - os: windows-latest
-            target: mingwX64
-            ext: .exe
-            assetExt: .exe
-            releaseCommand: runReleaseExecutableMingwX64
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - uses: actions/checkout@v2.3.4
-      - name: Build project (${{ matrix.target }})
-        id: build
-        uses: burrunan/gradle-cache-action@v1
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
         with:
-          job-id: ${{ matrix.target }}
-          arguments: clean ${{ matrix.releaseCommand }}
-          gradle-version: wrapper
-      - name: Generate archive path
-        id: archive_path
-        run: |
-          echo "::set-output name=ARCHIVE::build/bin/${{ matrix.target }}/releaseExecutable/katan-cli${{ matrix.ext }}"
-      - name: Upload artifacts
-        id: upload_artifacts
-        uses: svenstaro/upload-release-action@v2
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: github
+          settings-path: ${{ github.workspace }}
+      - name: Build with Gradle
+        run: gradle build
+      - name: Publish to GitHub Packages
+        run: gradle publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.archive_path.outputs.ARCHIVE }}
-          asset_name: katan-cli-${{ matrix.target }}${{ matrix.assetExt }}
-          tag: ${{ github.ref }}
-          overwrite: true
-          prerelease: ${{ contains(github.ref, 'beta') || contains(github.ref, 'alpha') }}
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -6,7 +6,6 @@ Multiplatform command-line interface for Katan.
 This project targets tools for node manipulation, general backup workflow management, remote server and file uploads, and fast and easy installation and cluster integration using the orchestrator of your choice for Katan.
 
 * [Supported platforms](#supported-platforms)
-* [Installation](#installation)
 * [Documentation](#documentation)
 * [Issue reporting](#issue-reporting)
 * [License](#license)

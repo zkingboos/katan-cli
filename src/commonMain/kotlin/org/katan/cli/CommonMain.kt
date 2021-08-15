@@ -16,9 +16,13 @@ internal fun printVersion() {
 }
 
 suspend fun initCli(args: Array<String>) {
-    try {
-        MainCommand().subcommands(VersionCommand()).parse(args)
-    } catch (e: PrintHelpMessage) {
-        println(e.command.getFormattedHelp())
+    val command = MainCommand().subcommands(VersionCommand())
+
+    // avoid returning exit code 1 if no arguments provided
+    if (args.isEmpty()) {
+        terminal.println(command.getFormattedHelp())
+        return
     }
+
+    command.main(args)
 }

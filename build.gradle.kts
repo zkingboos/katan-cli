@@ -77,4 +77,8 @@ tasks {
             println("$ cp $sourceDirectory/${rootProject.name}.kexe $targetDir/$commandName")
         }
     }
+
+    named("compileKotlin") {
+        dependsOn("version")
+    }
 }

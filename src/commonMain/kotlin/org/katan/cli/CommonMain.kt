@@ -6,7 +6,8 @@ import org.katan.cli.commands.MainCommand
 import org.katan.cli.commands.VersionCommand
 
 suspend fun initCli(args: Array<String>) {
-    println("Initialized @ $platform")
+    val terminal = Terminal()
+
     try {
         MainCommand().subcommands(VersionCommand()).parse(args)
     } catch (e: PrintHelpMessage) {

@@ -26,8 +26,7 @@ You can follow updates on project status in our official Discord community and d
 Check out the [Official Documentation](https://katan.org) for installation steps, supported platforms and more.
 
 ## Issue reporting
-If your issue is related to some Katan functionality, redirect your issue to [main project issues](https://github.
-com/KatanPanel/Katan/issues).
+If your issue is related to some Katan functionality, redirect your issue to [main project issues](https://github.com/KatanPanel/Katan/issues).
 
 ## License
 katan-cli is licensed under the [MIT](https://github.com/KatanPanel/katan-cli/blob/main/LICENSE) license.

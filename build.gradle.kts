@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform") version Libs.kotlinVersion
     kotlin("plugin.serialization") version Libs.kotlinVersion
-    `maven-publish`
 }
 
 group = "org.katan.cli"

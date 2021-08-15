@@ -94,17 +94,18 @@ tasks {
         description = "Build the native executable and install in the current platform"
         dependsOn("runDebugExecutable$nativeTarget")
 
+        val commandName = "katan"
         val nativeTargetName = nativeTarget.first().toLowerCase() + nativeTarget.substring(1)
         val sourceDirectory = "build/bin/$nativeTargetName/debugExecutable"
         from(sourceDirectory) {
             include("${rootProject.name}.kexe")
-            rename { rootProject.name }
+            rename { commandName }
         }
 
         val targetDir = "/usr/local/bin"
         into(targetDir)
         doLast {
-            println("$ cp $sourceDirectory/${rootProject.name}.kexe $targetDir/${rootProject.name}")
+            println("$ cp $sourceDirectory/${rootProject.name}.kexe $targetDir/$commandName")
         }
     }
     

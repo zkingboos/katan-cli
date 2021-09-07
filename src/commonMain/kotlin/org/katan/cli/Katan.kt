@@ -1,3 +1,4 @@
 package org.katan.cli
 
-const val KATAN_VERSION = "0.0.1"
+internal const val VERSION = "0.0.1"
+internal const val PRIMARY_COLOR = "#4b7bec"

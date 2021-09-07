@@ -4,6 +4,7 @@ plugins {
 }
 
 group = "org.katan.cli"
+group = "org.katan"
 version = "0.0.1"
 
 repositories {

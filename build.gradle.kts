@@ -38,7 +38,10 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
-                implementation(Libs.KTX.Coroutines.core)
+                implementation(Libs.KTX.Coroutines.core) {
+                    version { strictly(Libs.KTX.Coroutines.version) }
+                }
+                implementation(Libs.katanSdk)
                 implementation(Libs.clikt)
                 implementation(Libs.mordant)
             }

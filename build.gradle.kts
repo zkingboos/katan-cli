@@ -49,12 +49,6 @@ kotlin {
             }
         }
 
-        val nativeMain by creating {
-            dependsOn(commonMain)
-        }
-
-        val linuxX64Main by getting { dependsOn(nativeMain) }
-        val macosX64Main by getting { dependsOn(nativeMain) }
         val jvmMain by getting { dependsOn(commonMain) }
         val nativeMain by creating { dependsOn(commonMain) }
         val posixMain by creating { dependsOn(nativeMain) }

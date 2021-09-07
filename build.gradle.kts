@@ -1,14 +1,19 @@
 plugins {
     kotlin("multiplatform") version Libs.kotlinVersion
     kotlin("plugin.serialization") version Libs.kotlinVersion
+    id("application")
 }
 
-group = "org.katan.cli"
 group = "org.katan"
 version = "0.0.1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
+}
+
+application {
+    mainClassName = "$group.Main"
 }
 
 // setup common binary executable entrypoint to native targets
@@ -24,6 +29,7 @@ kotlin {
     macosX64 { entryPoint() }
     mingwX64 { entryPoint() }
     linuxX64 { entryPoint() }
+    jvm()
 
     sourceSets {
         all {
@@ -44,6 +50,7 @@ kotlin {
 
         val linuxX64Main by getting { dependsOn(nativeMain) }
         val macosX64Main by getting { dependsOn(nativeMain) }
+        val jvmMain by getting { dependsOn(commonMain) }
         val mingwX64Main by getting { dependsOn(nativeMain) }
     }
 }

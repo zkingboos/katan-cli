@@ -88,6 +88,9 @@ tasks {
                     into(INSTALL)
                 }
             }
+    jar {
+        manifest {
+            attributes["Main-Class"] = application.mainClassName
         }
     }
 

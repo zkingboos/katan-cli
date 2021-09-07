@@ -13,14 +13,14 @@ repositories {
 }
 
 application {
-    mainClassName = "$group.Main"
+    mainClassName = "$group.cli.Main"
 }
 
 // setup common binary executable entrypoint to native targets
 fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
     binaries {
         executable {
-            entryPoint = "$group.main"
+            entryPoint = "$group.cli.main"
         }
     }
 }

@@ -33,7 +33,9 @@ kotlin {
 
     sourceSets {
         all {
-            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
+            languageSettings {
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
+            }
         }
 
         val commonMain by getting {
@@ -54,15 +56,18 @@ kotlin {
         val linuxX64Main by getting { dependsOn(nativeMain) }
         val macosX64Main by getting { dependsOn(nativeMain) }
         val jvmMain by getting { dependsOn(commonMain) }
+        val nativeMain by creating { dependsOn(commonMain) }
+        val posixMain by creating { dependsOn(nativeMain) }
         val mingwX64Main by getting { dependsOn(nativeMain) }
+        val linuxX64Main by getting {
+            dependsOn(posixMain)
+            dependsOn(nativeMain)
+        }
+        val macosX64Main by getting {
+            dependsOn(posixMain)
+            dependsOn(nativeMain)
+        }
     }
-}
-
-interface Injected {
-    @get:Inject
-    val exec: ExecOperations
-    @get:Inject
-    val fs: FileSystemOperations
 }
 
 val mainCommand = "katan"

@@ -65,29 +65,6 @@ interface Injected {
 val mainCommand = "katan"
 
 tasks {
-    register("completions") {
-        group = "run"
-        description = "Generate Bash/Zsh/Fish completion files"
-        dependsOn("install")
-
-        val injected = project.objects.newInstance<Injected>()
-        val shells = listOf(
-            Triple("bash", file("completions/$mainCommand.bash"), "/usr/local/etc/bash_completion.d"),
-            Triple("zsh", file("completions/_$mainCommand.zsh"), "/usr/local/share/zsh/site-functions"),
-            Triple("fish", file("completions/$mainCommand.fish"), "/usr/local/share/fish/vendor_completions.d"),
-        )
-        for ((SHELL, FILE, INSTALL) in shells) {
-            actions.add {
-                injected.exec.exec {
-                    commandLine(mainCommand, "--generate-completion", SHELL)
-                    standardOutput = FILE.outputStream()
-                }
-
-                injected.fs.copy {
-                    from(FILE)
-                    into(INSTALL)
-                }
-            }
     jar {
         manifest {
             attributes["Main-Class"] = application.mainClassName

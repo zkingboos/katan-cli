@@ -6,6 +6,13 @@ object Libs {
     const val mordant = "com.github.ajalt.mordant:mordant:2.0.0-beta2"
     const val katanSdk = "org.katan:katan-sdk:0.0.1"
 
+    object Ktor {
+        private const val prefix = "io.ktor:ktor"
+        const val version = "1.6.3"
+
+        const val clientCIO = "$prefix-client-cio:$version"
+    }
+
     object KTX {
         object Coroutines {
             private const val prefix = "org.jetbrains.kotlinx:kotlinx-coroutines"

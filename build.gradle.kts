@@ -13,7 +13,7 @@ repositories {
 }
 
 application {
-    mainClassName = "$group.cli.Main"
+    mainClassName = "$group.cli.MainKt"
 }
 
 // setup common binary executable entrypoint to native targets

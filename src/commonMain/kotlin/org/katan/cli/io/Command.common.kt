@@ -2,7 +2,7 @@ package org.katan.cli.io
 
 expect suspend fun executeCommand(
     command: List<String>,
-    builder: CommandBuilder.() -> Unit
+    builder: CommandBuilder.() -> Unit = {}
 ): String
 
 class CommandBuilder {

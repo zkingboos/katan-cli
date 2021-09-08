@@ -10,7 +10,7 @@ object Libs {
         private const val prefix = "io.ktor:ktor"
         const val version = "1.6.3"
 
-        const val clientCIO = "$prefix-client-cio:$version"
+        const val client = "$prefix-client-core:$version"
     }
 
     object KTX {

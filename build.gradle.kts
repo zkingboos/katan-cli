@@ -46,7 +46,7 @@ kotlin {
                 implementation(Libs.katanSdk)
                 implementation(Libs.clikt)
                 implementation(Libs.mordant)
-                implementation(Libs.Ktor.clientCIO)
+                implementation(Libs.Ktor.client)
             }
         }
 

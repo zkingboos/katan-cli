@@ -1,18 +1,24 @@
 object Libs {
 
-    const val kotlinVersion = "1.5.20"
+    const val kotlinVersion = "1.5.10"
+
+    const val clikt = "com.github.ajalt.clikt:clikt:3.2.0"
+    const val mordant = "com.github.ajalt.mordant:mordant:2.0.0-beta2"
+    const val katanSdk = "org.katan:katan-sdk:0.0.1"
+
+    object Ktor {
+        private const val prefix = "io.ktor:ktor"
+        const val version = "1.6.3"
+
+        const val client = "$prefix-client-core:$version"
+    }
 
     object KTX {
-        const val nodeJs = "org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7"
-
         object Coroutines {
             private const val prefix = "org.jetbrains.kotlinx:kotlinx-coroutines"
-            private const val version = "1.5.1"
+            const val version = "1.5.0-native-mt"
 
             const val core = "$prefix-core:$version"
-            const val windows = "$prefix-core-mingwx64:$version"
-            const val linux = "$prefix-core-linuxx64:$version"
-            const val macos = "$prefix-core-macosx64:$version"
         }
     }
 

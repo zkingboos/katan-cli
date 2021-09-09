@@ -1,151 +1,104 @@
-import io.github.gciatto.kt.node.*
-
 plugins {
-    id("com.github.johnrengelman.shadow") version "6.0.0"
-    id("io.github.gciatto.kt-npm-publish") version "0.3.9"
     kotlin("multiplatform") version Libs.kotlinVersion
     kotlin("plugin.serialization") version Libs.kotlinVersion
-    application
-    `maven-publish`
+    id("application")
 }
 
-val PROJECT = "katan-cli"
-
-group = "gg.katan.cli"
+group = "org.katan"
 version = "0.0.1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 application {
-    mainClass.set("gg.katan.cli.JvmMainKt")
+    mainClassName = "$group.cli.MainKt"
 }
 
 // setup common binary executable entrypoint to native targets
 fun org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithHostTests.entryPoint() {
     binaries {
         executable {
-            entryPoint = "gg.katan.cli.main"
+            entryPoint = "$group.cli.main"
         }
     }
 }
 
-java {
-    disableAutoTargetJvm()
-}
-
 kotlin {
-    val jvmTarget = jvm()
     macosX64 { entryPoint() }
     mingwX64 { entryPoint() }
     linuxX64 { entryPoint() }
-
-    js(LEGACY) {
-        nodejs()
-        binaries.executable()
-    }
+    jvm()
 
     sourceSets {
         all {
-            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
+            languageSettings {
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
+            }
         }
 
         val commonMain by getting {
             dependencies {
-                implementation(Libs.KTX.Coroutines.core)
+                implementation(Libs.KTX.Coroutines.core) {
+                    version { strictly(Libs.KTX.Coroutines.version) }
+                }
+                implementation(Libs.katanSdk)
+                implementation(Libs.clikt)
+                implementation(Libs.mordant)
+                implementation(Libs.Ktor.client)
             }
         }
 
-        val nativeMain by creating {
-            dependsOn(commonMain)
-        }
-
+        val jvmMain by getting { dependsOn(commonMain) }
+        val nativeMain by creating { dependsOn(commonMain) }
+        val posixMain by creating { dependsOn(nativeMain) }
+        val mingwX64Main by getting { dependsOn(nativeMain) }
         val linuxX64Main by getting {
+            dependsOn(posixMain)
             dependsOn(nativeMain)
         }
-
-        val mingwX64Main by getting {
-            dependsOn(nativeMain)
-        }
-
         val macosX64Main by getting {
+            dependsOn(posixMain)
             dependsOn(nativeMain)
-        }
-
-        val jsMain by getting {
-            repositories {
-                jcenter()
-            }
-
-            dependencies {
-                implementation(Libs.KTX.nodeJs)
-            }
-        }
-    }
-
-    tasks {
-        withType<JavaExec> {
-            val compilation = jvmTarget.compilations.getByName<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmCompilation>("main")
-            classpath(files(
-                compilation.runtimeDependencyFiles,
-                compilation.output.allOutputs
-            ))
         }
     }
 }
 
+val mainCommand = "katan"
+
 tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = application.mainClassName
+        }
+    }
+
     register<Copy>("install") {
         group = "run"
-        description = "Build and install native executable"
+        description = "Build the native executable and install in the current platform"
 
-        val hostOs = System.getProperty("os.name")
+        val os = System.getProperty("os.name")
         val nativeTarget = when {
-            hostOs == "Mac OS X" -> "MacosX64"
-            hostOs == "Linux" -> "LinuxX64"
-            hostOs.startsWith("Windows") -> "MingwX64"
-            else -> throw GradleException("Host $hostOs is not supported in Kotlin/Native.")
+            os == "Mac OS X" -> "MacosX64"
+            os == "Linux" -> "LinuxX64"
+            os.startsWith("Windows") -> "MingwX64"
+            else -> throw GradleException("OS $os is not supported in Kotlin/Native")
         }
 
         dependsOn("runDebugExecutable$nativeTarget")
-        val targetLowercase = nativeTarget.first().toLowerCase() + nativeTarget.substring(1)
-        val folder = "build/bin/$targetLowercase/debugExecutable"
-        from(folder) {
+
+        val nativeTargetName = nativeTarget.first().toLowerCase() + nativeTarget.substring(1)
+        val sourceDirectory = "build/bin/$nativeTargetName/debugExecutable"
+        from(sourceDirectory) {
             include("${rootProject.name}.kexe")
-            rename { PROJECT }
+            rename { mainCommand }
         }
 
-        val destDir = "/usr/local/bin"
-        into(destDir)
+        val targetDir = "/usr/local/bin"
+        into(targetDir)
         doLast {
-            println("$ cp $folder/${rootProject.name}.kexe $destDir/$PROJECT")
+            println("$ cp $sourceDirectory/${rootProject.name}.kexe $targetDir/$mainCommand")
         }
     }
-}
-
-npmPublishing {
-    val pkg = "cli"
-    val organization = "katan.gg"
-
-    liftPackageJson {
-        main = "kotlin/$PROJECT"
-        homepage = "https://github.com/KatanPanel/katan-cli"
-        bugs = Bugs("https://github.com/KatanPanel/katan-cli/issues")
-        license = "MIT"
-        bins = mutableMapOf(PROJECT to "./$PROJECT")
-        keywords = mutableListOf("katan", "cli", "kotlin", "multiplatform")
-        files = mutableListOf("bin/$PROJECT")
-        name = "@$organization/$pkg"
-        dependencies = dependencies?.mapKeys { (key, _) ->
-            if (name!! in key) "@$organization/$key" else key
-        }?.toMutableMap()
-    }
-
-    liftJsSources { _, _, line ->
-        line.replace("'$PROJECT", "'@$organization/$pkg")
-            .replace("\"$PROJECT", "\"@$organization/$pkg")
-    }
-
-    token.set(System.getenv("NPM_AUTH_TOKEN"))
 }

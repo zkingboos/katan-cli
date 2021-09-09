@@ -1,6 +1,0 @@
-#!/usr/bin/env node
-let program = require("./katan-cli.js")
-
-process.argv.shift()
-process.argv.shift()
-program.gg.katan.cli.katanCli(process.argv)
